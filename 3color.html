@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <title>Zeroth Law of thermodynamics</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="sins/MOMstyle.css">
+    <script type="text/javascript" src='sins/jquery.min.js'></script>
+    <script type="text/javascript" src='sins/jquery-ui.min.js'></script>
+    <script type="module">
+
+        var temp1 = 30;
+        var temp2 = 30;
+        var temp3 = 30;
+        var flag = true;
+
+        var colour_array = ["#038fe7","#068de4","#098be0","#0c89dd","#0f87da","#1285d7","#1583d3","#1881d0","#1b7fcd","#1e7dca","#217bc6","#2379c3","#2677c0","#2975bd","#2c73b9","#2f71b6","#326fb3","#356db0","#386bac","#3b69a9","#3e67a6","#4165a3","#44639f","#47619c","#4a5f99","#4d5d96","#505b92","#53598f","#56578c","#595589","#5c5385","#5f5182","#624f7f","#654d7c","#684b78","#6b4975","#6d4672","#70446f","#73426b","#764068","#793e65","#7c3c62","#7f3a5e","#82385b","#853658","#883455","#8b3251","#8e304e","#912e4b","#942c48","#972a44","#9a2841","#9d263e","#a0243b","#a32237","#a62034","#a91e31","#ac1c2e","#af1a2a","#b11827","#b41624","#b71421","#ba121d","#bd101a","#c00e17","#c30c14","#c60a10","#c9080d","#cc060a","#cf0407","#d20203"];
+
+        document.getElementById("playpausebutton").addEventListener( 'click', startstop, false );
+
+        varinit();
+
+        var canvas = document.getElementById("simscreen");
+        var context = canvas.getContext('2d');
+
+        drawrect1();
+        drawrect2();
+        drawrect3();
+
+        function drawrect1() {
+            context.clearRect(60, 150, 140, 100);
+            context.beginPath();
+            context.fillStyle = colour_array[$('#l1slider').slider("value") - 30];
+            context.font='bold 40px Calibri';
+            context.fillText("A", 120, 120);
+            context.rect(60, 150, 140, 100);
+            context.fill();
+            context.stroke();
+        }
+        function drawrect2() {
+            context.clearRect(230, 150, 140, 100);
+            context.beginPath();
+            context.fillText("B", 290, 120);
+            context.fillStyle = colour_array[$('#l1slider2').slider("value") - 30];
+            context.rect(230, 150, 140, 100);
+            context.fill();
+            context.stroke();
+        }
+        function drawrect3() {
+            context.clearRect(400, 150, 140, 100);
+            context.beginPath();
+            context.fillText("C", 460, 120);
+            context.fillStyle = colour_array[$('#l1slider3').slider("value") - 30];
+            context.rect(400, 150, 140, 100);
+            context.fill();
+            context.stroke();
+        }
+
+        function varinit(){
+
+            varchange();
+
+            $('#l1slider').slider("value", 30);
+            $('#l1spinner').spinner("value", 30);
+
+            $('#l1slider2').slider("value", 30);
+            $('#l1spinner2').spinner("value", 30);
+
+            $('#l1slider3').slider("value", 30);
+            $('#l1spinner3').spinner("value", 30);
+
+            document.getElementById("p1").innerHTML="Temp A = "+$('#l1spinner').spinner("value")+"(C<sup>o</sup>) Degrees Celsius";
+            document.getElementById("p2").innerHTML="Temp B  = "+$('#l1spinner2').spinner("value")+"(C<sup>o</sup>) Degrees Celsius";
+            document.getElementById("p3").innerHTML="Temp C  = "+$('#l1spinner3').spinner("value")+"(C<sup>o</sup>) Degrees Celsius";
+        }
+
+        function varchange()
+        {
+
+            $('#l1slider').slider({ max : 100, min : 30, step : 1 });					// slider initialisation : jQuery widget
+            $('#l1spinner').spinner({ max : 100, min : 30, step : 1 });					// number initialisation : jQuery widget
+
+            $('#l1slider2').slider({ max : 100, min : 30, step : 1 });					// slider initialisation : jQuery widget
+            $('#l1spinner2').spinner({ max : 100, min : 30, step : 1 });				// number initialisation : jQuery widget
+
+            $('#l1slider3').slider({ max : 100, min : 30, step : 1 });					// slider initialisation : jQuery widget
+            $('#l1spinner3').spinner({ max : 100, min : 30, step : 1 });                // number initialisation : jQuery
+
+
+            $( "#l1slider" ).on( "slide",   function( e, ui ) {$('#l1spinner').spinner("value",ui.value);varupdate();drawrect1();} );
+            $( "#l1spinner" ).on( "spin",   function( e, ui ) {$('#l1slider').slider("value",ui.value);drawrect1();} );
+            $( "#l1spinner" ).on( "change", function() {varchange();drawrect1();} );
+
+            $( "#l1slider2" ).on( "slide",   function( e, ui ) {$('#l1spinner2').spinner("value",ui.value);varupdate();drawrect2();} );
+            $( "#l1spinner2" ).on( "spin",   function( e, ui ) {$('#l1slider2').slider("value",ui.value); drawrect2();} );
+            $( "#l1spinner2" ).on( "change", function() {varchange();drawrect2();} );
+
+            $( "#l1slider3" ).on( "slide",   function( e, ui ) {$('#l1spinner3').spinner("value",ui.value);varupdate();drawrect3();} );
+            $( "#l1spinner3" ).on( "spin",   function( e, ui ) {$('#l1slider3').slider("value",ui.value);drawrect3();} );
+            $( "#l1spinner3" ).on( "change", function() {varchange();drawrect3();} );
+
+            document.getElementById("commentboxright").innerHTML = "The three bodies are the same Temperature";
+
+            varupdate();
+        }
+        //Computing of various system parameters
+
+        function varupdate() {
+            $('#l1slider').slider("value", $('#l1spinner').spinner('value'));  //updating slider location with change in spinner(debug) -->
+            temp1 = $('#l1spinner').spinner("value");
+            document.getElementById("p1").innerHTML = "Temp A = " + $('#l1spinner').spinner("value") + "(C<sup>o</sup>) Degrees Celsius";
+            console.log(temp1);
+
+            $('#l1slider2').slider("value", $('#l1spinner2').spinner('value'));  //updating slider location with change in spinner(debug) -->
+            temp2 = $('#l1spinner2').spinner("value");
+            document.getElementById("p2").innerHTML = "Temp B = " + $('#l1spinner2').spinner("value") + "(C<sup>o</sup>) Degrees Celsius";
+            console.log(temp2);
+
+            $('#l1slider3').slider("value", $('#l1spinner3').spinner('value'));  //updating slider location with change in spinner(debug) -->
+            temp3 = $('#l1spinner3').spinner("value");
+            document.getElementById("p3").innerHTML = "Temp C = " + $('#l1spinner3').spinner("value") + "(C<sup>o</sup>) Degrees Celsius";
+            console.log(temp3);
+
+            if (temp1 === temp2 && temp2 === temp3) {
+                document.getElementById("commentboxright").innerHTML = "The three bodies A,B and C are the same Temperature";
+            } else {
+                if (temp1 === temp2) {
+                    document.getElementById("commentboxright").innerHTML = "The bodies A and B are the same Temperature ";
+                } else if (temp2 === temp3) {
+                    document.getElementById("commentboxright").innerHTML = "The bodies B and C are the same Temperature ";
+                } else if (temp1 === temp3) {
+                    document.getElementById("commentboxright").innerHTML = "The bodies A and C are the same Temperature ";
+                } else {
+                    document.getElementById("commentboxright").innerHTML = "";
+                }
+            }
+        }
+
+            function startstop() {
+
+                if (flag === true) {
+
+                    document.getElementById('playpausebutton').src = "sins/blueplaydull.png";
+                    flag = false;
+                    $('#l1spinner').spinner("disable");
+                    $('#l1spinner2').spinner("disable");
+                    $('#l1spinner3').spinner("disable");
+
+                    $('#l1slider').slider("disable");
+                    $('#l1slider2').slider("disable");
+                    $('#l1slider3').slider("disable");
+
+                } else {
+
+                    document.getElementById('playpausebutton').src = "sins/bluepausedull.png";
+                    flag = true;
+                    $('#l1spinner').spinner("enable");
+                    $('#l1spinner2').spinner("enable");
+                    $('#l1spinner3').spinner("enable");
+
+                    $('#l1slider').slider("enable");
+                    $('#l1slider2').slider("enable");
+                    $('#l1slider3').slider("enable");
+
+                }
+        }
+    </script>
+    <noscript>The simulation requires JavaScript to be enabled.</noscript>
+</head>
+
+<body>
+
+<div id="container">
+
+    <div id="simtitle">Zeroth Law of Thermodynamics</div>
+
+    <canvas id="simscreen" height="390px" width="590px">
+    </canvas>
+
+    <div id="titleincanvas"></div>
+
+    <div id="commentboxleft">
+        <p id="p1" style="line-height:0.1"></p>
+        <p id="p2" style="line-height:0.1"></p>
+        <p id="p3" style="line-height:0.1"></p>
+    </div>
+    <div id="commentboxright"></div>
+
+    <div id="vartitle">VARIABLES</div>
+
+    <div id="variables">
+        <div class="variable">
+            <div class="varname">
+                <p title="left">Temp A (C<sup>o</sup>)</p>
+                <input id="l1spinner" type="number" placeholder="30" autocomplete="off"  ><br>
+                <div id="l1slider"></div><br>
+            </div>
+
+            <div class="varname">
+                <p title="center">Temp B (C<sup>o</sup>)</p>
+                <input id="l1spinner2" type="number" placeholder="30" autocomplete="off" ><br>
+                <div id="l1slider2"></div><br>
+            </div>
+
+            <div class="varname">
+                <p title="right">Temp C (C<sup>o</sup>)</p>
+                <input id="l1spinner3" type="number" placeholder="30" autocomplete="off" ><br>
+                <div id="l1slider3"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--    DND-Title of region for controls display-->
+<div id="ctrltitle">CONTROLS</div>
+<!-- Region for User controls of simulation-->
+<div id="controls"><img id="playpausebutton" src="sins/bluepausedull.png"  alt="Play Pause"/></div>
+<!-- DND-Copyright display-->
+<div id="copyright" title="Developer : SOLVEr"> Copyright &copy; SOLVE The Virtual Lab @ NITK Surathkal </div>
+</body>
+</html>
